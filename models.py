@@ -4,7 +4,7 @@
 由原 C 语言「智能商城系统」（shop_v2.c）翻译而来，改用 Python dataclass 表达，
 并新增「支付网关」所需的支付记录模型。
 """
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass
 
 
 @dataclass

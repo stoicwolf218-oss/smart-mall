@@ -5,7 +5,6 @@
 用简单的统计规则代替“真·机器学习”，代码短、可解释、可复现。
 """
 from collections import Counter
-from datetime import datetime
 from typing import List
 
 from models import Product, Order, User
@@ -25,10 +24,8 @@ def predict_sales(orders: List[Order], days: int = 7) -> dict:
     if not orders:
         return {"avg_daily": 0.0, "prediction": 0.0, "days": days,
                 "note": "暂无历史订单，无法预测。"}
-    # 订单时间格式：YYYY-MM-DD HH:MM:SS，取日期部分
+    # 订单时间格式：YYYY-MM-DD HH:MM:SS，取日期部分；按活跃天数估算日均销量
     dates = [o.order_date[:10] for o in orders]
-    today = datetime.now().strftime("%Y-%m-%d")
-    recent = [d for d in dates if d >= _days_ago(days)]
     span = max(len(set(dates)), 1)
     avg_daily = len(orders) / span
     prediction = round(avg_daily * days, 1)
@@ -57,8 +54,3 @@ def ai_recommend(user: User, products: List[Product], orders: List[Order]) -> Li
 
     ranked = sorted(on_sale, key=score, reverse=True)
     return ranked[:5]
-
-
-def _days_ago(n: int) -> str:
-    from datetime import timedelta
-    return (datetime.now() - timedelta(days=n)).strftime("%Y-%m-%d")
