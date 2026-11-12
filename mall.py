@@ -14,6 +14,7 @@ from models import Product, User, Order, PaymentRecord
 from storage import Storage
 from payment import PaymentGateway, PayMethod
 import ai
+import checkout
 
 
 def _now() -> str:
@@ -292,10 +293,11 @@ class Mall:
             return {"ok": False, "message": f"库存不足，仅剩 {product.quantity} 件。"}
 
         original_total = round(product.price * qty, 2)
-        # 学生折扣：学生享 10% 优惠（对应 Exercise 2 的 apply_student_discount）
+        # 学生折扣：复用 checkout.apply_student_discount（Exercise 2 核心功能）
         student_discount = 0.0
         if user.is_student:
-            student_discount = round(original_total * 0.10, 2)
+            discounted = checkout.apply_student_discount(original_total, True)
+            student_discount = round(original_total - discounted, 2)
         total = round(original_total - student_discount, 2)
         # 优惠券抵扣：券 ≥ 折后价 → 全抵（实付 0）；否则抵券额
         discount = 0.0
