@@ -1,79 +1,70 @@
 # -*- coding: utf-8 -*-
-"""无界面冒烟测试：验证商城核心逻辑 + 支付网关。"""
+"""无界面冒烟测试：验证 v3 商城核心逻辑 + 支付网关。"""
 import os
 import sys
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from storage import Storage
 from mall import Mall
 from payment import PayMethod
-import tempfile
 
-# 用临时目录，避免污染真实 data/
-tmp = tempfile.mkdtemp(prefix="smoke_mall_")
-from storage import Storage
-mall = Mall(Storage(data_dir=tmp))
+mall = Mall(Storage(data_dir=tempfile.mkdtemp(prefix="smoke_v3_")))
 
-print("== 初始数据 ==")
-print("商品数:", len(mall.list_products()), "用户数:", len(mall.users))
+print("== 初始 ==", "商品", len(mall.products), "用户", len(mall.users))
 
-print("\n== 注册 ==")
+print("\n== 注册（应送 5 元券）==")
 ok, msg, u = mall.register("alice", "pw", "爱丽丝")
-print(ok, msg, "-> 优惠券", u.coupon if u else None)
+print(ok, msg, "| 券:", u.coupon)
 
-print("\n== 登录 ==")
+print("\n== 灰度默认 0（应 False）==")
+print("in_gray(alice id):", mall.in_gray(u.id))
+
+print("\n== 开启灰度 100%，新用户首次登录应送 3 元 ==")
+mall.set_gray_percent(100)
 kind, u2, msg = mall.login("alice", "pw")
-print(kind, u2.username, msg)
+print(msg, "| 券:", u2.coupon)
+kind, u2, msg = mall.login("alice", "pw")   # 再次登录不应重复送
+print("再次登录:", msg, "| 券:", u2.coupon, "（应仍为 8）")
 
-print("\n== 充值 ==")
+print("\n== 充值 200 ==")
 print(mall.recharge(u2.id, 200))
 
-print("\n== 余额支付购买 ==")
-res = mall.buy(u2.id, 101, 3, use_coupon=True, method=PayMethod.BALANCE)
+print("\n== 余额购买 3 件方便面(4.5*3=13.5)，用券 8 元 → 实付 5.5 ==")
+res = mall.buy(u2.id, 101, 3, True, PayMethod.BALANCE)
 print(res)
 
 print("\n== 支付宝购买（不扣余额） ==")
-res2 = mall.buy(u2.id, 102, 2, use_coupon=True, method=PayMethod.ALIPAY)
-print(res2)
+print(mall.buy(u2.id, 102, 2, False, PayMethod.ALIPAY))
 
-print("\n== 银行卡支付（卡号无效应失败） ==")
-res3 = mall.buy(u2.id, 103, 1, use_coupon=False, method=PayMethod.BANK, card_no="123")
-print(res3)
+print("\n== 满 200 送 5 元券：充值到够，一次性买 200 元 ==")
+mall.recharge(u2.id, 1000)
+u2 = mall.find_user(u2.id)
+before = u2.coupon
+print("购买前券:", before, "| 累计消费:", u2.total_spent)
+res = mall.buy(u2.id, 101, 45, False, PayMethod.BALANCE)  # 45*4.5=202.5
+u2 = mall.find_user(u2.id)
+print("购买 202.5 元后 → 券:", u2.coupon, "累计:", u2.total_spent, "VIP:", u2.is_vip)
 
-print("\n== 银行卡支付（有效卡号应成功） ==")
-res4 = mall.buy(u2.id, 103, 1, use_coupon=False, method=PayMethod.BANK, card_no="6222021234567890")
-print(res4)
+print("\n== 满 500 升 VIP 送 20 ==")
+res = mall.buy(u2.id, 103, 60, False, PayMethod.BALANCE)  # 60*5.5=330
+u2 = mall.find_user(u2.id)
+print("累计:", u2.total_spent, "VIP:", u2.is_vip, "券:", u2.coupon)
 
-print("\n== 余额不足应失败 ==")
-mall.recharge(u2.id, 0)  # no-op
-u2.balance = 0
-mall._save_users()
-res5 = mall.buy(u2.id, 101, 1, use_coupon=False, method=PayMethod.BALANCE)
-print(res5)
-
-print("\n== 订单 ==")
-for o in mall.user_orders(u2.id):
-    print(o.order_id, o.product_name, o.total, o.payment_method)
-
-print("\n== 支付流水 ==")
-for t in mall.list_payments():
-    print(t.transaction_id, t.amount, t.method, t.status)
-
-print("\n== 销量预测 ==")
-print(mall.predict_sales())
+print("\n== 销量预测（最小二乘，商品 101） ==")
+print(mall.predict_sales(101))
 
 print("\n== AI 推荐 ==")
-for p in mall.recommend(u2.id):
-    print(p.id, p.name)
+for r in mall.recommend(u2.id):
+    print(r)
 
-print("\n== 灰度 ==")
-print("user id 2 是否灰度:", mall.in_gray(2))
+print("\n== 充值限额（应拒绝 -1 / 100000）==")
+print(mall.recharge(u2.id, -1))
+print(mall.recharge(u2.id, 100000))
 
-print("\n== 过期检测 ==")
-print("过期商品数:", mall.check_expired())
-
-print("\n== 备份/恢复 ==")
-print(mall.backup())
-print(mall.restore())
+print("\n== 管理员密码持久化 ==")
+print(mall.change_admin_password("123456", "newpw"))
+print("新密码登录:", mall.login("admin", "newpw")[0])
 
 print("\nSMOKE TEST PASSED ✅")

@@ -1,0 +1,740 @@
+/* ==========================================================================
+   智能商城系统 · 设计系统
+   纯手写 CSS，零第三方依赖，离线可用
+   ========================================================================== */
+
+/* ---------- 设计 Tokens ---------- */
+:root {
+  /* 主色 */
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --violet: #8b5cf6;
+  --grad-brand: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --grad-btn: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+
+  /* 中性色 */
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+
+  /* 状态色 */
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* 圆角 */
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --radius-tag: 6px;
+
+  /* 阴影 */
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 12px 28px rgba(99, 102, 241, 0.18);
+  --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.25);
+
+  /* 字体 */
+  --font: -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC",
+    "Hiragino Sans GB", sans-serif;
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* ---------- 工具类 ---------- */
+.hidden {
+  display: none !important;
+}
+
+/* ---------- 卡片容器 ---------- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* ---------- 网格布局 ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ==========================================================================
+   顶部导航
+   ========================================================================== */
+.navbar {
+  background: var(--grad-brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 28px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+}
+
+.navbar .brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.navbar .brand .logo {
+  font-size: 26px;
+}
+
+.navbar .nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Tab 切换按钮
+   ========================================================================== */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: var(--radius-tag);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.tab.active {
+  background: #fff;
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   按钮
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-control);
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease,
+    background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--grad-btn);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.5);
+  filter: brightness(1.06);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.45);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.btn-ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+/* ==========================================================================
+   表单
+   ========================================================================== */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 11px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-control);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+/* ---------- 错误提示 ---------- */
+.error-msg {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: var(--radius-control);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+/* ==========================================================================
+   徽章
+   ========================================================================== */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-tag);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.badge-vip {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
+}
+
+.badge-danger {
+  background: rgba(239, 68, 68, 0.14);
+  color: var(--danger);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+
+.badge-info,
+.badge-primary {
+  background: rgba(99, 102, 241, 0.14);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: var(--grad-brand);
+  color: #fff;
+}
+
+/* ==========================================================================
+   表格
+   ========================================================================== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: #fff;
+}
+
+.table thead {
+  background: #f3f4f6;
+  color: var(--text-secondary);
+}
+
+.table th {
+  padding: 13px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 13px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* ==========================================================================
+   模态框
+   ========================================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: modal-fade 0.2s ease;
+}
+
+.modal-content {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-modal);
+  padding: 28px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modal-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-content h2,
+.modal-content h3 {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* 支付方式 radio 组 */
+#pay-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+#pay-methods label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  font-weight: 500;
+}
+
+#pay-methods label:hover {
+  border-color: var(--primary-light);
+}
+
+#pay-methods input[type="radio"] {
+  accent-color: var(--primary);
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+#pay-methods input[type="radio"]:checked + span,
+#pay-methods label:has(input:checked) {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+/* ==========================================================================
+   登录页
+   ========================================================================== */
+#view-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--grad-brand);
+}
+
+#view-login .card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 36px;
+}
+
+#view-login .brand-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#view-login .brand-logo .logo {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+#view-login .brand-logo h1 {
+  font-size: 24px;
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+#view-login .brand-logo p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   小猫情绪
+   ========================================================================== */
+#cat-mood {
+  font-size: 64px;
+  text-align: center;
+  line-height: 1;
+  margin: 12px 0;
+  transition: transform 0.3s ease;
+}
+
+#cat-mood:hover {
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   商品卡片
+   ========================================================================== */
+#product-grid .card,
+#recommend-grid .card,
+.product-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+#product-grid .card:hover,
+#recommend-grid .card:hover,
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.product-thumb {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+}
+
+.product-body {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.product-category {
+  font-size: 12px;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.12);
+  align-self: flex-start;
+  padding: 2px 10px;
+  border-radius: var(--radius-tag);
+  font-weight: 600;
+}
+
+.product-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.product-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.product-price::before {
+  content: "¥";
+  font-size: 15px;
+  margin-right: 2px;
+}
+
+.product-stock {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.product-stock.low {
+  color: var(--danger);
+}
+
+.product-card .btn {
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   页面主区域
+   ========================================================================== */
+main,
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 8px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   动画
+   ========================================================================== */
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.grid > * {
+  animation: fade-in-up 0.35s ease both;
+}
+
+/* ==========================================================================
+   响应式
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .navbar .nav-tabs {
+    margin-left: 0;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  main,
+  .container {
+    padding: 20px 16px 40px;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .modal-content {
+    padding: 22px 18px;
+  }
+}
+
+/* ===== 学生身份 / 注册勾选项 ===== */
+.form-check {
+  display: flex;
+  align-items: center;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text, #333);
+}
+
+.check-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #6366f1;
+}
+
+.student-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #ede9fe;
+}

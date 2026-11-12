@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能商城系统</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+
+  <!-- ============ 登录 / 注册页 ============ -->
+  <main id="view-login" class="auth-view">
+    <section class="auth-card card">
+      <header class="auth-header">
+        <div class="brand">
+          <span class="brand-emoji">🐱</span>
+          <h1 class="brand-name">智能商城系统</h1>
+        </div>
+        <p class="brand-sub">AI 驱动的智慧购物与库存管理平台</p>
+      </header>
+
+      <!-- 登录表单 -->
+      <form id="login-form" class="auth-form" autocomplete="off">
+        <h2 class="auth-title">欢迎回来</h2>
+        <div class="form-field">
+          <label for="login-username">用户名</label>
+          <input type="text" id="login-username" name="username" placeholder="请输入用户名" required>
+        </div>
+        <div class="form-field">
+          <label for="login-password">密码</label>
+          <input type="password" id="login-password" name="password" placeholder="请输入密码" required>
+        </div>
+        <p id="login-error" class="error-msg hidden"></p>
+        <button type="submit" id="login-btn" class="btn btn-primary btn-block">登 录</button>
+      </form>
+
+      <!-- 注册表单（初始隐藏） -->
+      <form id="register-form" class="auth-form hidden" autocomplete="off">
+        <h2 class="auth-title">创建账号</h2>
+        <div class="form-field">
+          <label for="register-username">用户名</label>
+          <input type="text" id="register-username" name="username" placeholder="请输入用户名" required>
+        </div>
+        <div class="form-field">
+          <label for="register-name">昵称</label>
+          <input type="text" id="register-name" name="name" placeholder="请输入昵称" required>
+        </div>
+        <div class="form-field">
+          <label for="register-password">密码</label>
+          <input type="password" id="register-password" name="password" placeholder="请设置密码" required>
+        </div>
+        <div class="form-field form-check">
+          <label class="check-label">
+            <input type="checkbox" id="register-student"> 我是学生（购物享 9 折优惠）
+          </label>
+        </div>
+        <p id="register-error" class="error-msg hidden"></p>
+        <button type="submit" id="register-btn" class="btn btn-primary btn-block">注 册</button>
+      </form>
+
+      <footer class="auth-footer">
+        <p id="goto-register">还没有账号？<a href="#" id="to-register" class="auth-link">立即注册</a></p>
+        <p id="goto-login" class="hidden">已有账号？<a href="#" id="to-login" class="auth-link">返回登录</a></p>
+      </footer>
+    </section>
+  </main>
+
+  <!-- ============ 买家主界面 ============ -->
+  <main id="view-buyer" class="hidden">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <span class="brand-emoji">🐱</span>
+        <span class="brand-name">智能商城</span>
+      </div>
+      <div class="navbar-mood" id="cat-mood">
+        <span class="mood-emoji">🐱</span>
+        <span class="mood-text">欢迎光临~</span>
+      </div>
+      <div class="navbar-user">
+        <span class="badge">用户</span>
+        <span id="buyer-name" class="navbar-username">——</span>
+        <button id="btn-logout" class="btn btn-ghost">退出登录</button>
+      </div>
+    </nav>
+
+    <div class="tab-bar">
+      <button id="tab-shop-btn" class="tab active">🛍️ 商品选购</button>
+      <button id="tab-orders-btn" class="tab">📦 我的订单</button>
+      <button id="tab-me-btn" class="tab">👤 个人中心</button>
+    </div>
+
+    <!-- 商品选购 -->
+    <section id="tab-shop" class="tab-panel">
+      <div class="card search-card">
+        <div class="search-row">
+          <input type="text" id="search-input" class="search-input" placeholder="搜索商品名称 / 分类…">
+          <button id="search-btn" class="btn btn-primary">搜索</button>
+        </div>
+        <p class="muted-hint">💡 支持按名称或分类模糊搜索</p>
+      </div>
+
+      <div class="section-block">
+        <h3 class="section-title">✨ AI 智能推荐</h3>
+        <div id="recommend-grid" class="grid recommend-grid">
+          <p class="muted-hint">正在为您生成个性化推荐…</p>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <h3 class="section-title">🛒 全部商品</h3>
+        <div id="product-grid" class="grid product-grid">
+          <p class="muted-hint">加载中，请稍候…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 我的订单 -->
+    <section id="tab-orders" class="tab-panel hidden">
+      <div class="section-block">
+        <h3 class="section-title">📦 我的订单</h3>
+        <div id="orders-list" class="orders-list">
+          <p class="muted-hint">暂无订单，快去选购商品吧～</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 个人中心 -->
+    <section id="tab-me" class="tab-panel hidden">
+      <div class="grid me-grid">
+        <div class="card">
+          <h3 class="section-title">👤 个人信息</h3>
+          <div id="me-info" class="me-info">
+            <p class="muted-hint">加载中…</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">💰 账户充值</h3>
+          <div class="form-field">
+            <label for="recharge-amount">充值金额（元）</label>
+            <input type="number" id="recharge-amount" min="0" step="0.01" placeholder="请输入金额">
+          </div>
+          <button id="recharge-btn" class="btn btn-primary">立即充值</button>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">🔒 修改密码</h3>
+          <div class="form-field">
+            <label for="old-pw">原密码</label>
+            <input type="password" id="old-pw" placeholder="请输入原密码">
+          </div>
+          <div class="form-field">
+            <label for="new-pw">新密码</label>
+            <input type="password" id="new-pw" placeholder="请设置新密码">
+          </div>
+          <button id="change-pw-btn" class="btn btn-primary">确认修改</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 管理员后台 ============ -->
+  <main id="view-admin" class="hidden">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <span class="brand-emoji">🐱</span>
+        <span class="brand-name">智能商城 · 管理后台</span>
+      </div>
+      <div class="navbar-user">
+        <span class="badge badge-admin">管理员</span>
+        <button id="btn-logout" class="btn btn-ghost">退出登录</button>
+      </div>
+    </nav>
+
+    <div class="tab-bar">
+      <button id="tab-products-btn" class="tab active">📦 商品管理</button>
+      <button id="tab-users-btn" class="tab">👥 用户管理</button>
+      <button id="tab-data-btn" class="tab">📊 数据与系统</button>
+    </div>
+
+    <!-- 商品管理 -->
+    <section id="tab-products" class="tab-panel">
+      <div class="card">
+        <div class="section-head">
+          <h3 class="section-title">📦 商品管理</h3>
+          <button id="add-product-btn" class="btn btn-primary">＋ 新增商品</button>
+        </div>
+
+        <form id="product-form" class="product-form hidden">
+          <div class="form-field">
+            <label for="product-category">分类</label>
+            <input type="text" id="product-category" placeholder="如：水果 / 饮料 / 零食">
+          </div>
+          <div class="form-field">
+            <label for="product-name">名称</label>
+            <input type="text" id="product-name" placeholder="商品名称">
+          </div>
+          <div class="form-field">
+            <label for="product-price">价格（元）</label>
+            <input type="number" id="product-price" min="0" step="0.01" placeholder="0.00">
+          </div>
+          <div class="form-field">
+            <label>生产日期</label>
+            <div class="date-row">
+              <input type="number" id="product-year" min="2000" max="2100" placeholder="年">
+              <input type="number" id="product-month" min="1" max="12" placeholder="月">
+              <input type="number" id="product-day" min="1" max="31" placeholder="日">
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="product-shelf-life">保质期（天）</label>
+            <input type="number" id="product-shelf-life" min="0" placeholder="天数">
+          </div>
+          <div class="form-field">
+            <label for="product-quantity">库存</label>
+            <input type="number" id="product-quantity" min="0" placeholder="数量">
+          </div>
+          <div class="form-field">
+            <label for="product-is-on-sale">是否在售</label>
+            <select id="product-is-on-sale">
+              <option value="true">在售</option>
+              <option value="false">下架</option>
+            </select>
+          </div>
+          <button type="submit" id="product-form-submit-btn" class="btn btn-primary">保存商品</button>
+        </form>
+
+        <div class="toolbar">
+          <button id="btn-check-expired" class="btn btn-ghost">⏱ 检查过期</button>
+          <button id="btn-clear-zero" class="btn btn-ghost">🗑 清零库存</button>
+          <button id="btn-clear-expired" class="btn btn-danger">⚠ 清理过期</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="admin-product-table" class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>分类</th>
+                <th>名称</th>
+                <th>价格</th>
+                <th>生产日期</th>
+                <th>保质期(天)</th>
+                <th>库存</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="admin-product-tbody">
+              <tr><td colspan="9" class="muted-hint">加载中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 用户管理 -->
+    <section id="tab-users" class="tab-panel hidden">
+      <div class="card">
+        <h3 class="section-title">👥 用户管理</h3>
+        <div class="table-wrap">
+          <table id="admin-user-table" class="table">
+            <thead>
+              <tr>
+                <th>用户名</th>
+                <th>昵称</th>
+                <th>角色</th>
+                <th>余额</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" class="muted-hint">加载中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 数据与系统 -->
+    <section id="tab-data" class="tab-panel hidden">
+      <div class="grid me-grid">
+        <div class="card">
+          <h3 class="section-title">🔮 AI 销量预测</h3>
+          <div class="form-field">
+            <label for="predict-product-id">商品 ID</label>
+            <input type="number" id="predict-product-id" min="1" placeholder="输入商品 ID">
+          </div>
+          <button id="predict-btn" class="btn btn-primary">开始预测</button>
+          <div id="predict-result" class="predict-result muted-hint">预测结果将显示在这里</div>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">🎨 灰度放量</h3>
+          <div class="form-field">
+            <label for="gray-input">灰度比例（0 - 1）</label>
+            <input type="number" id="gray-input" min="0" max="1" step="0.1" placeholder="0.0">
+          </div>
+          <button id="gray-btn" class="btn btn-primary">应用</button>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">🧾 支付流水</h3>
+          <div class="table-wrap">
+            <table id="payments-table" class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>用户名</th>
+                  <th>商品</th>
+                  <th>金额</th>
+                  <th>方式</th>
+                  <th>时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6" class="muted-hint">暂无流水</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">💾 数据备份与恢复</h3>
+          <div class="toolbar">
+            <button id="backup-btn" class="btn btn-primary">备份数据</button>
+            <button id="restore-btn" class="btn btn-ghost">恢复数据</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">🔒 修改管理员密码</h3>
+          <div class="form-field">
+            <label for="admin-old-pw">原密码</label>
+            <input type="password" id="admin-old-pw" placeholder="请输入原密码">
+          </div>
+          <div class="form-field">
+            <label for="admin-new-pw">新密码</label>
+            <input type="password" id="admin-new-pw" placeholder="请设置新密码">
+          </div>
+          <button id="admin-change-pw-btn" class="btn btn-primary">确认修改</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 支付弹窗 ============ -->
+  <div id="payment-modal" class="modal hidden">
+    <div class="modal-content card">
+      <header class="modal-header">
+        <h2 id="pay-title" class="modal-title">订单支付</h2>
+      </header>
+      <div id="pay-product-info" class="pay-product-info">
+        <p class="muted-hint">商品信息加载中…</p>
+      </div>
+
+      <div class="form-field">
+        <label>支付方式</label>
+        <div id="pay-methods" class="pay-methods">
+          <label class="pay-method"><input type="radio" name="pay-method" value="balance" checked> 💰 余额支付</label>
+          <label class="pay-method"><input type="radio" name="pay-method" value="alipay"> 📱 支付宝</label>
+          <label class="pay-method"><input type="radio" name="pay-method" value="wechat"> 💬 微信支付</label>
+          <label class="pay-method"><input type="radio" name="pay-method" value="card"> 💳 银行卡</label>
+        </div>
+      </div>
+
+      <div id="pay-card-input" class="form-field hidden">
+        <label for="pay-card-number">银行卡号</label>
+        <input type="text" id="pay-card-number" placeholder="请输入银行卡号">
+      </div>
+
+      <div class="modal-actions">
+        <button id="pay-confirm" class="btn btn-primary">确认支付</button>
+        <button id="pay-cancel" class="btn btn-ghost">取消</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

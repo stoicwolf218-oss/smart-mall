@@ -92,6 +92,18 @@ class Storage:
         rows = [asdict(p) for p in payments]
         _atomic_write(self.payments_path, json.dumps(rows, ensure_ascii=False, indent=2))
 
+    # ---------- 管理员密码持久化（admin.txt） ----------
+    def load_admin_password(self, default: str = "123456") -> str:
+        path = os.path.join(self.data_dir, "admin.txt")
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8") as f:
+                pw = f.read().strip()
+                return pw or default
+        return default
+
+    def save_admin_password(self, pw: str) -> None:
+        _atomic_write(os.path.join(self.data_dir, "admin.txt"), pw)
+
     # ---------- 备份 / 恢复 ----------
     def backup(self, backup_dir: str = "latest_backup") -> None:
         os.makedirs(backup_dir, exist_ok=True)

@@ -31,12 +31,14 @@ class User:
     username: str
     password: str
     name: str
-    coupon: float = 10.0
+    coupon: float = 5.0
     balance: float = 0.0
     total_spent: float = 0.0
     order_count: int = 0
     is_vip: bool = False
     register_date: str = ""
+    gray_given: bool = False   # 灰度福利是否已发放（防反复登录重复赠券）
+    is_student: bool = False   # 是否学生（享受 10% 学生折扣，对应 Exercise 2 的核心功能）
 
 
 @dataclass
