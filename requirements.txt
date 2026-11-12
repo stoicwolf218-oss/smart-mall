@@ -1,0 +1,5 @@
+# 本项目只使用 Python 标准库（tkinter / json / dataclasses / datetime 等），
+# 无需安装任何第三方依赖，直接用 Python 3.8+ 运行即可。
+#
+# 运行：
+#   python main.py

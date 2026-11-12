@@ -1,0 +1,11 @@
+# 运行期生成的数据与缓存
+data/
+latest_backup/
+__pycache__/
+*.pyc
+*.tmp
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
