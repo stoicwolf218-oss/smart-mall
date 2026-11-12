@@ -260,20 +260,7 @@
       <div class="card">
         <h3 class="section-title">👥 用户管理</h3>
         <div class="table-wrap">
-          <table id="admin-user-table" class="table">
-            <thead>
-              <tr>
-                <th>用户名</th>
-                <th>昵称</th>
-                <th>角色</th>
-                <th>余额</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td colspan="5" class="muted-hint">加载中…</td></tr>
-            </tbody>
-          </table>
+          <div id="admin-user-table" class="table"></div>
         </div>
       </div>
     </section>
@@ -294,8 +281,8 @@
         <div class="card">
           <h3 class="section-title">🎨 灰度放量</h3>
           <div class="form-field">
-            <label for="gray-input">灰度比例（0 - 1）</label>
-            <input type="number" id="gray-input" min="0" max="1" step="0.1" placeholder="0.0">
+            <label for="gray-input">灰度比例（0 - 100，整数百分比）</label>
+            <input type="number" id="gray-input" min="0" max="100" step="1" placeholder="0">
           </div>
           <button id="gray-btn" class="btn btn-primary">应用</button>
         </div>
@@ -303,21 +290,7 @@
         <div class="card">
           <h3 class="section-title">🧾 支付流水</h3>
           <div class="table-wrap">
-            <table id="payments-table" class="table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>用户名</th>
-                  <th>商品</th>
-                  <th>金额</th>
-                  <th>方式</th>
-                  <th>时间</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td colspan="6" class="muted-hint">暂无流水</td></tr>
-              </tbody>
-            </table>
+            <div id="payments-table" class="table"></div>
           </div>
         </div>
 

@@ -421,17 +421,19 @@ function renderAdminProducts(products) {
   adminProducts = products || [];
   const el = $('admin-product-tbody');
   if (!el) return;
-  if (!adminProducts.length) { el.innerHTML = '<tr><td colspan="8">暂无商品</td></tr>'; return; }
+  if (!adminProducts.length) { el.innerHTML = '<tr><td colspan="9">暂无商品</td></tr>'; return; }
   el.innerHTML = adminProducts.map((p) => {
     const status = p.is_expired
       ? '<span class="status expired">已过期</span>'
       : (p.is_on_sale ? '<span class="status on">在售</span>' : '<span class="status off">已下架</span>');
+    const d = (p.year ? `${p.year}-${String(p.month).padStart(2, '0')}-${String(p.day).padStart(2, '0')}` : '');
     return `<tr>
       <td>${p.id}</td>
       <td>${esc(p.category)}</td>
       <td>${esc(p.name)}</td>
       <td>¥${fmt(p.price)}</td>
-      <td>${esc(p.expired_date || '')}</td>
+      <td>${esc(d)}</td>
+      <td>${p.shelf_life}</td>
       <td>${p.quantity}</td>
       <td>${status}</td>
       <td><button onclick="adminEditProduct(${p.id})">编辑</button> <button onclick="adminDeleteProduct(${p.id})">删除</button></td>
@@ -442,8 +444,11 @@ function renderAdminProducts(products) {
 function field(name) {
   const f = $('product-form');
   if (!f) return null;
-  let el = f.elements ? f.elements[name] : null;
+  let el = null;
+  if (f.elements && f.elements[name]) el = f.elements[name];
   if (!el) el = f.querySelector('[name="' + name + '"]');
+  if (!el) el = document.getElementById(name);
+  if (!el) el = document.getElementById('product-' + name);
   return el || null;
 }
 
@@ -462,7 +467,10 @@ function fillProductForm(p) {
   setField('shelf_life', p.shelf_life);
   setField('quantity', p.quantity);
   const os = field('is_on_sale');
-  if (os) os.checked = !!p.is_on_sale;
+  if (os) {
+    if (os.type === 'checkbox') os.checked = !!p.is_on_sale;
+    else os.value = p.is_on_sale ? 'true' : 'false';
+  }
 }
 
 function readProductForm() {
